@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMAX | Premium Lighting Store</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* --- 1. GLOBAL SETTINGS --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; outline: none; }
+        :root {
+            --bg-dark: #050505;
+            --bg-light: #ffffff;
+            --bg-creme: #fdfbf7;
+            --text-main: #1a1a1a;
+            --gold: #d4af37;
+            --accent-red: #e74c3c;
+            --gray: #f4f4f4;
+        }
+        body { font-family: 'Manrope', sans-serif; background-color: var(--bg-light); color: var(--text-main); overflow-x: hidden; }
+        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+        img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        button { cursor: pointer; transition: 0.3s; }
+        button:active { transform: scale(0.95); }
+        a { cursor: pointer; text-decoration: none; color: inherit; }
+
+        /* --- 2. NAVIGATION --- */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 20px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; 
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            color: #000;
+        }
+        .logo { font-size: 1.8rem; font-weight: 600; letter-spacing: 1px; font-family: 'Playfair Display'; }
+        
+        .menu { display: flex; gap: 40px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .menu a:hover, .menu a.active { color: var(--gold); font-weight: bold; }
+
+        .nav-icons { display: flex; gap: 20px; align-items: center; }
+        .icon-btn { 
+            background: none; border: none; color: #000; font-size: 1.2rem; display: flex; align-items: center; position: relative; 
+        }
+        .icon-btn:hover { color: var(--gold); }
+        .cart-count {
+            position: absolute; top: -8px; right: -8px;
+            background: var(--gold); color: black;
+            font-size: 0.7rem; font-weight: bold;
+            width: 18px; height: 18px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* --- 3. PAGE SWITCHING LOGIC --- */
+        .page-section { display: none; animation: fadeIn 0.5s ease; }
+        .page-section.active-page { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- 4. HOME PAGE STYLES --- */
+        .hero-container { position: relative; height: 100vh; width: 100%; overflow: hidden; background: #000; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; display: flex; align-items: center; padding-left: 8%; }
+        .slide.active { opacity: 1; }
+        .slide-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .slide-bg::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%); }
+        .hero-content { position: relative; z-index: 2; color: white; max-width: 600px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); animation: slideUp 1s ease forwards; }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .discount-tag { background: var(--gold); color: black; padding: 5px 15px; font-weight: bold; border-radius: 4px; display: inline-block; margin-bottom: 15px; font-size: 0.8rem; }
+        .hero-content h1 { font-size: 4rem; line-height: 1.1; margin-bottom: 15px; }
+        .hero-content p { font-size: 1.1rem; margin-bottom: 25px; color: #ddd; }
+        .price-area { font-size: 1.5rem; margin-bottom: 30px; }
+        .old-price { text-decoration: line-through; color: #aaa; font-size: 1rem; margin-right: 10px; }
+        .btn-hero { padding: 15px 40px; background: white; color: black; border: none; font-size: 1rem; border-radius: 50px; font-weight: 600; }
+        .btn-hero:hover { background: var(--gold); color: white; }
+        .slider-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 3; }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; }
+        .dot.active { background: var(--gold); width: 30px; border-radius: 10px; transition: 0.3s; }
+        .marquee { background: var(--gold); padding: 15px 0; overflow: hidden; white-space: nowrap; color: black; }
+        .marquee span { font-weight: 700; margin-right: 50px; letter-spacing: 2px; text-transform: uppercase; }
+        
+        .section-padding { padding: 100px 5%; }
+        .sec-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px; }
+        .sec-title { font-size: 3rem; }
+        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 350px 350px; gap: 20px; }
+        .g-item { position: relative; border-radius: 15px; overflow: hidden; cursor: pointer; }
+        .g-item img { transition: 0.5s; }
+        .g-item:hover img { transform: scale(1.1); }
+        .g-item-1 { grid-column: 1 / 2; grid-row: 1 / 3; } 
+        .g-item-2 { grid-column: 2 / 4; grid-row: 1 / 2; } 
+        .price-badge { position: absolute; bottom: 20px; left: 20px; background: white; padding: 8px 20px; border-radius: 30px; font-weight: 600; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .add-btn-small { background: var(--gold); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition:0.3s; }
+        .add-btn-small:hover { background: black; color: white; }
+
+        .feature-dark { background: #111; color: white; padding: 100px 5%; display: flex; align-items: center; gap: 50px; }
+        .fd-img { flex: 1; height: 500px; border-radius: 20px; overflow: hidden; }
+        .fd-text { flex: 1; }
+        .fd-text h2 { font-size: 3.5rem; margin-bottom: 20px; color: var(--gold); }
+        .stats { display: flex; gap: 40px; margin-top: 40px; border-top: 1px solid #333; padding-top: 30px; }
+        .stat-box h3 { font-size: 2rem; }
+        .stat-box p { color: #888; font-size: 0.9rem; }
+        .owner-section { background-color: var(--bg-creme); padding: 100px 5%; display: flex; align-items: center; justify-content: center; gap: 60px; }
+        .owner-img-box { position: relative; width: 350px; height: 450px; }
+        .owner-img-box img { border-radius: 10px; box-shadow: 20px 20px 0px var(--gold); }
+        .owner-content { max-width: 500px; }
+        .owner-content h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        .signature { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-style: italic; color: #333; }
+
+        /* --- 5. SHOP PAGE STYLES --- */
+        .shop-wrapper { padding: 120px 5% 50px; background: #fff; min-height: 100vh; }
+        .shop-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
+        .shop-title h1 { font-size: 2.5rem; }
+        .shop-title p { color: #666; }
+        
+        .filters-row { display: flex; gap: 15px; }
+        .filter-chip { padding: 8px 20px; border: 1px solid #ddd; border-radius: 30px; background: white; transition: 0.3s; font-size: 0.9rem; }
+        .filter-chip:hover, .filter-chip.active { background: black; color: white; border-color: black; }
+
+        .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 40px; }
+        .shop-card { border: 1px solid #eee; border-radius: 10px; overflow: hidden; transition: 0.3s; position: relative; background: white; }
+        .shop-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .shop-img-box { height: 280px; width: 100%; background: #f9f9f9; position: relative; }
+        .shop-overlay { position: absolute; bottom: 10px; left: 0; width: 100%; text-align: center; opacity: 0; transition: 0.3s; transform: translateY(10px); }
+        .shop-card:hover .shop-overlay { opacity: 1; transform: translateY(0); }
+        .btn-quick-view { background: white; padding: 8px 20px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: none; }
+        
+        .shop-info { padding: 15px; }
+        .shop-cat { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .shop-name { font-weight: 600; margin: 5px 0; font-size: 1.05rem; }
+        .shop-price { color: var(--gold); font-weight: bold; font-size: 1.1rem; }
+        .shop-add-btn { width: 100%; margin-top: 15px; background: black; color: white; padding: 10px; border: none; border-radius: 5px; font-weight: 600; }
+        .shop-add-btn:hover { background: var(--gold); color: black; }
+
+        /* Admin Controls */
+        .admin-controls { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-edit { flex: 1; background: #3498db; color: white; border: none; padding: 5px; border-radius: 4px; font-size: 0.8rem; }
+        .btn-delete { flex: 1; background: #e74c3c; color: white; border: none; padding: 5px; border-radius: 4px; font-size: 0.8rem; }
+
+        /* --- 6. ABOUT PAGE STYLES --- */
+        .about-wrapper { background: white; min-height: 100vh; }
+        .about-hero {
+            height: 60vh; width: 100%; background: var(--bg-creme); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 5%;
+        }
+        .about-hero h1 { font-size: 4rem; margin-bottom: 15px; color: var(--text-main); }
+        .about-hero p { font-size: 1.2rem; color: #666; max-width: 600px; }
+        
+        .founder-big-section { padding: 100px 5%; display: flex; align-items: center; gap: 80px; background: white; }
+        .founder-large-img { flex: 1; height: 600px; position: relative; }
+        .founder-large-img img { border-radius: 5px; box-shadow: 30px 30px 0 var(--gold); }
+        .founder-text { flex: 1; }
+        .founder-text h4 { color: var(--gold); letter-spacing: 2px; margin-bottom: 10px; }
+        .founder-text h2 { font-size: 3.5rem; margin-bottom: 30px; line-height: 1.2; }
+        .founder-text p { color: #555; line-height: 1.8; margin-bottom: 30px; font-size: 1.05rem; }
+        
+        .values-section { padding: 80px 5%; background: #000; color: white; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; text-align: center; }
+        .v-box i { font-size: 2.5rem; color: var(--gold); margin-bottom: 20px; }
+        .v-box h3 { font-size: 1.5rem; margin-bottom: 15px; }
+        .v-box p { color: #888; font-size: 0.9rem; line-height: 1.6; }
+
+        /* --- 7. UNIVERSAL CART DRAWER --- */
+        .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; display: none; }
+        .cart-drawer { position: fixed; top: 0; right: -400px; width: 380px; height: 100%; background: white; z-index: 2001; transition: 0.4s ease; display: flex; flex-direction: column; box-shadow: -5px 0 30px rgba(0,0,0,0.1); }
+        .cart-drawer.open { right: 0; }
+        .cart-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fcfcfc; }
+        .cart-body { flex: 1; padding: 20px; overflow-y: auto; }
+        .cart-footer { padding: 20px; border-top: 1px solid #eee; background: #fcfcfc; }
+        .cart-item { display: flex; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; }
+        .cart-item img { width: 60px; height: 60px; border-radius: 5px; object-fit: cover; }
+        .cart-item-details h4 { font-size: 0.9rem; margin-bottom: 5px; }
+        .cart-item-details p { color: var(--gold); font-weight: bold; font-size: 0.9rem; }
+        .btn-remove { color: red; font-size: 0.8rem; text-decoration: underline; background: none; border: none; padding: 0; margin-top: 5px; }
+        .btn-checkout { width: 100%; padding: 15px; background: var(--gold); border: none; font-weight: bold; margin-top: 10px; border-radius: 5px; }
+
+        /* --- 8. MODAL (Popup) --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 3000; display: none; justify-content: center; align-items: center; opacity: 0; transition: 0.3s; }
+        .modal-overlay.open { display: flex; opacity: 1; }
+        .modal-content { background: white; width: 900px; max-width: 95%; max-height: 90vh; border-radius: 10px; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .m-img-box { background: #f4f4f4; }
+        .m-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .m-details { padding: 40px; overflow-y: auto; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; z-index: 10; color: #333; }
+        .watt-btn { padding: 8px 15px; border: 1px solid #ddd; background: white; margin-right: 5px; cursor: pointer; border-radius: 4px; }
+        .watt-btn.selected { background: black; color: white; border-color: black; }
+
+        /* --- 9. FORMS (Checkout & Admin) --- */
+        .form-container { padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-family: 'Manrope', sans-serif; transition: 0.3s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); }
+        .form-header { font-size: 1.5rem; font-weight: bold; font-family: 'Playfair Display'; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid var(--gold); width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; margin-right: 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .admin-trigger-btn { background: none; border: none; font-size: 0.8rem; color: #ccc; cursor: pointer; margin-top: 50px; }
+        .admin-trigger-btn:hover { color: #888; text-decoration: underline; }
+
+        /* Footer */
+        footer { background: #000; color: white; padding: 60px 5%; border-top: 1px solid #222; margin-top: auto; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+        .f-col h3 { font-size: 2rem; margin-bottom: 20px; color: var(--gold); }
+        .f-col ul li { margin-bottom: 10px; color: #888; cursor: pointer; }
+
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .grid-container { display: flex; flex-direction: column; height: auto; }
+            .g-item { height: 300px; }
+            .feature-dark, .owner-section, .footer-grid { flex-direction: column; text-align: center; }
+            .founder-big-section { flex-direction: column; text-align: center; padding: 50px 5%; }
+            .founder-large-img { height: 400px; width: 100%; }
+            .values-section { grid-template-columns: 1fr; }
+            .menu { display: none; }
+            .modal-content { grid-template-columns: 1fr; }
+            .m-img-box { height: 250px; }
+            .about-hero h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="logo">LUMAX</div>
+        <div class="menu">
+            <a onclick="switchPage('home')" class="active" id="link-home">Home</a>
+            <a onclick="switchPage('shop')" id="link-shop">Shop</a>
+            <a onclick="switchPage('about')" id="link-about">About</a>
+        </div>
+        <div class="nav-icons">
+            <button class="icon-btn" onclick="toggleCart()">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ================= HOME PAGE SECTION ================= -->
+    <div id="home-page" class="page-section active-page">
+        <!-- Hero Slider -->
+        <div class="hero-container">
+            <div class="slide active">
+                <div class="slide-bg"><img src="https://image2url.com/images/1765475953690-ffd78f39-afd0-42f6-81e5-f1c32589ae77.png" alt="Hanging Bulb"></div>
+                <div class="hero-content">
+                    <div class="discount-tag">FLAT 40% OFF</div>
+                    <h1>Vintage Edison Series</h1>
+                    <p>Add a warm, nostalgic glow to your cafe or living room.</p>
+                    <div class="price-area"><span class="old-price">₹899</span> ₹499</div>
+                    <button class="btn-hero" onclick="switchPage('shop')">Shop Now</button>
+                </div>
+            </div>
+            <div class="slide">
+                <div class="slide-bg"><img src="https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?q=80&w=2672&auto=format&fit=crop" alt="Smart Lamp"></div>
+                <div class="hero-content">
+                    <div class="discount-tag">NEW ARRIVAL</div>
+                    <h1>Prime Spiral Series</h1>
+                    <p>Reliable brightness and modern lighting design crafted for everyday use.</p>
+                    <div class="price-area"><span class="old-price">₹499</span> ₹350</div>
+                    <button class="btn-hero" onclick="switchPage('shop')">Buy Now</button>
+                </div>
+            </div>
+            <div class="slider-dots">
+                <div class="dot active" onclick="currentSlide(1)"></div>
+                <div class="dot" onclick="currentSlide(2)"></div>
+            </div>
+        </div>
+
+        <div class="marquee"><marquee scrollamount="12">MADE IN INDIA • FREE SHIPPING ABOVE ₹999 • 2 YEAR WARRANTY • EASY RETURNS • COD AVAILABLE • MADE IN INDIA •</marquee></div>
+
+        <!-- Featured Products -->
+        <section class="section-padding">
+            <div class="sec-header">
+                <div><h4 style="color:var(--gold);">POPULAR CHOICE</h4><h2 class="sec-title">Best Sellers</h2></div>
+                <a onclick="switchPage('shop')" style="border-bottom:1px solid #000;">View All Products ↗</a>
+            </div>
+
+            <div class="grid-container">
+                <div class="g-item g-item-1" onclick="openProductModal(1)">
+                    <img src="https://image2url.com/images/1765476827772-f85d99d5-3614-49bf-8ca8-adbd0f98eec5.png">
+                    <div class="price-badge"><div>R-Bulb 9<br> <b>₹399</b></div><div class="add-btn-small">+</div></div>
+                </div>
+                <div class="g-item g-item-2" onclick="openProductModal(2)">
+                    <img src="https://image2url.com/images/1765476141566-eb3482af-174c-4c4f-a637-95727ad8394d.jpg">
+                    <div class="price-badge"><div> PrimeRound LED Panel <br> <b>₹4,999</b></div><div class="add-btn-small">+</div></div>
+                </div>
+                <div class="g-item g-item-3" onclick="openProductModal(3)">
+                    <img src="https://image2url.com/images/1765476672802-c3e4f933-1fa3-4dd4-aedd-f58b9a81fb3c.png">
+                    <div class="price-badge"><div>9W LED Bulb <br> <b>₹1,199</b></div><div class="add-btn-small">+</div></div>
+                </div>
+                <div class="g-item g-item-4" onclick="openProductModal(4)">
+                    <img src="https://image2url.com/images/1765476493276-c7ab112a-d0fc-42fe-ba76-4b24855a237c.jpg">
+                    <div class="price-badge"><div>StormGuard 200W Flood Light <br> <b>₹899</b></div><div class="add-btn-small">+</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Section -->
+        <section class="feature-dark">
+            <div class="fd-img"><img src="https://image2url.com/images/1765477049690-0372dfb0-1a26-436b-ace7-28527bedba3c.png" alt="Spiral Bulb"></div>
+            <div class="fd-text">
+                <h2>Prime Spiral Series</h2>
+                <p>Our signature spiral filament bulbs are designed to look beautiful whether they are on or off.</p>
+                <div class="stats">
+                    <div class="stat-box"><h3>25k</h3><p>Hours Life</p></div>
+                    <div class="stat-box"><h3>80%</h3><p>Energy Saving</p></div>
+                    <div class="stat-box"><h3>₹450</h3><p>Starting Price</p></div>
+                </div>
+                <br><br>
+                <button class="btn-hero" onclick="switchPage('shop')">Explore Collection</button>
+            </div>
+        </section>
+
+        <!-- Owner Section -->
+        <section class="owner-section">
+            <div class="owner-img-box"><img src="https://image2url.com/images/1765477365335-11aa815e-d9e3-49cb-97d2-7d93d55b4b33.png" alt="Owner"></div>
+            <div class="owner-content">
+                <h4>MEET THE FOUNDER</h4>
+                <h2>Lighting up India.</h2>
+                <p>"Namaste! I started Lumax with a simple vision: to bring world-class lighting design to Indian homes at affordable prices."</p>
+                <div class="signature">- Jagdish Sharma, Founder</div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ================= SHOP PAGE SECTION ================= -->
+    <div id="shop-page" class="page-section">
+        <div class="shop-wrapper">
+            <div class="shop-top-bar">
+                <div class="shop-title">
+                    <h1>Shop Collection</h1>
+                    <p>Explore our wide range of premium lighting solutions.</p>
+                </div>
+                <div class="filters-row">
+                    <button class="filter-chip active" onclick="renderShop('All', this)">All Products</button>
+                    <button class="filter-chip" onclick="renderShop('Bulb', this)">Bulbs</button>
+                    <button class="filter-chip" onclick="renderShop('Lamp', this)">Lamps</button>
+                    <button class="filter-chip" onclick="renderShop('Smart', this)">Smart</button>
+                </div>
+            </div>
+
+            <!-- Dynamic Product Grid -->
+            <div class="shop-grid" id="shopGrid">
+                <!-- Javascript will load items here -->
+            </div>
+
+            <!-- ADMIN BUTTON (Very Small at bottom) -->
+            <div style="text-align:center; margin-top:50px; opacity:0.6;">
+                <button class="admin-trigger-btn" onclick="openAdminLogin()">Admin Panel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= ABOUT PAGE SECTION ================= -->
+    <div id="about-page" class="page-section">
+        <div class="about-wrapper">
+            <div class="about-hero">
+                <h1>Illuminating Life</h1>
+                <p>We believe that light is more than just a utility. It's an art form that transforms spaces and moods.</p>
+            </div>
+
+            <!-- Big Founder Section -->
+            <div class="founder-big-section">
+                <div class="founder-large-img">
+                    <img src="https://image2url.com/images/1765477365335-11aa815e-d9e3-49cb-97d2-7d93d55b4b33.png" alt="Rahul Verma Founder">
+                </div>
+                <div class="founder-text">
+                    <h4>THE STORY</h4>
+                    <h2>Lighting up thousands of homes with passion and innovation.</h2>
+                    <p>
+                        "Namaste! I’m Jagdish Sharma from Rajasthan. I started Lumax with a simple dream – to bring affordable, energy-efficient lighting to every home. From a small garage to over 10,000 homes across India, our journey has been fueled by dedication and innovation.
+                        <br><br>
+                       "Today, Lumax continues to brighten lives with reliable, stylish, and durable lighting solutions. Our mission is simple – to make every home shine brighter while staying true to our vision of quality and trust."
+                    </p>
+                    <div class="signature" style="font-size:2rem; margin-top:20px;">Jagdish Sharma</div>
+                    <div style="margin-top:5px; font-size:0.9rem; color:#888;">Founder & CEO</div>
+                </div>
+            </div>
+
+            <!-- Values -->
+            <div class="values-section">
+                <div class="v-box">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>Innovation</h3>
+                    <p>Blending vintage aesthetics with modern energy-saving LED technology.</p>
+                </div>
+                <div class="v-box">
+                    <i class="fas fa-hands-holding-circle"></i>
+                    <h3>Craftsmanship</h3>
+                    <p>Every piece is inspected for quality. We prioritize durability and finish.</p>
+                </div>
+                <div class="v-box">
+                    <i class="fas fa-leaf"></i>
+                    <h3>Sustainability</h3>
+                    <p>We use recyclable materials and plastic-free packaging wherever possible.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= SHARED COMPONENTS ================= -->
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="f-col"><h3>LUMAX</h3><p style="color:#666;">Headquarters: Bidasar, Rajasthan .</p></div>
+            <div class="f-col"><h4>Shop</h4><ul><li>Living Room</li><li>Sale</li></ul></div>
+            <div class="f-col"><h4>Support</h4><ul><li>Track Order</li><li>Contact Us</li></ul></div>
+            <div class="f-col"><h4>Follow Us</h4><ul><li>Instagram</li><li>Facebook</li></ul></div>
+        </div>
+        <div style="text-align:center; margin-top:50px; color:#444; font-size:0.8rem;">&copy; 2025 Lumax India Pvt Ltd.</div>
+    </footer>
+
+    <!-- PRODUCT POPUP MODAL -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('productModal')">&times;</span>
+            <div class="m-img-box">
+                <img id="mImg" src="" alt="Product Image">
+            </div>
+            <div class="m-details">
+                <div style="color:var(--gold); font-weight:bold; letter-spacing:1px; margin-bottom:5px;">PREMIUM QUALITY</div>
+                <h2 style="font-size:2.5rem; margin-bottom:10px; font-family:'Playfair Display'" id="mTitle">Product Name</h2>
+                <div style="font-size:1.8rem; font-weight:bold; margin-bottom:20px;" id="mPrice">₹000</div>
+                <p style="color:#666; line-height:1.6; margin-bottom:20px;" id="mDesc">Description...</p>
+                
+                <div style="margin-bottom:25px;">
+                    <span style="font-weight:bold; display:block; margin-bottom:10px;">Wattage:</span>
+                    <button class="watt-btn selected">7W</button>
+                    <button class="watt-btn">9W</button>
+                    <button class="watt-btn">12W</button>
+                </div>
+
+                <div style="display:flex; gap:15px;">
+                    <button style="flex:1; background:transparent; border:2px solid black; padding:15px; font-weight:bold;" onclick="addToCartFromModal()">Add to Cart</button>
+                    <button style="flex:1; background:var(--gold); border:none; padding:15px; font-weight:bold;" onclick="buyNow()">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CART DRAWER -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <span style="cursor:pointer" onclick="toggleCart()">&times; Close</span>
+        </div>
+        <div class="cart-body" id="cartItemsContainer">
+            <p style="text-align:center; color:#888; margin-top:50px;">Your cart is empty.</p>
+        </div>
+        <div class="cart-footer">
+            <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:15px; font-size:1.1rem;">
+                <span>Total:</span>
+                <span id="cartTotal">₹0</span>
+            </div>
+            <button class="btn-checkout" onclick="openCheckout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal-content" style="display:block; width:500px; padding:0; height:auto; max-height:95vh; overflow-y:auto;">
+            <span class="close-btn" style="top:10px; right:15px;" onclick="closeModal('checkoutModal')">&times;</span>
+            <div class="form-container">
+                <div class="form-header">Shipping Details</div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="c-name" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="number" id="c-phone" placeholder="10-digit mobile number">
+                </div>
+                <div class="form-group">
+                    <label>Full Address</label>
+                    <input type="text" id="c-address" placeholder="House No, Street, City, State">
+                </div>
+                <div class="form-group">
+                    <label>Payment Mode</label>
+                    <select id="c-payment">
+                        <option value="COD">Cash on Delivery (COD)</option>
+                        <option value="UPI">UPI (GPay/PhonePe)</option>
+                    </select>
+                </div>
+                <div style="margin-top:20px; border-top:1px solid #eee; padding-top:15px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold;">
+                        <span>Order Total:</span>
+                        <span id="checkoutTotalAmount">₹0</span>
+                    </div>
+                    <button id="placeOrderBtn" style="width:100%; padding:15px; background:var(--gold); border:none; border-radius:5px; font-weight:bold; font-size:1rem;" onclick="confirmOrder()">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN LOGIN MODAL -->
+    <div class="modal-overlay" id="adminLoginModal">
+        <div class="modal-content" style="display:block; width:400px; padding:0; height:auto; overflow:hidden;">
+            <span class="close-btn" style="top:10px; right:15px;" onclick="closeModal('adminLoginModal')">&times;</span>
+            <div class="form-container" style="text-align:center;">
+                <div class="form-header">Admin Access</div>
+                <p style="font-size:0.9rem; margin-bottom:20px; color:#666;">Please verify your identity.</p>
+                <div class="form-group">
+                    <input type="email" id="admin-email" placeholder="Enter Admin Email" style="text-align:center;">
+                </div>
+                <button onclick="verifyAdmin()" style="width:100%; padding:12px; background:black; color:white; border:none; font-weight:bold; border-radius:5px;">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN ADD/EDIT PRODUCT MODAL -->
+    <div class="modal-overlay" id="addProductModal">
+        <div class="modal-content" style="display:block; width:600px; padding:0; height:auto; max-height:90vh; overflow-y:auto;">
+            <span class="close-btn" style="top:10px; right:15px;" onclick="closeModal('addProductModal')">&times;</span>
+            <div class="form-container">
+                <div class="form-header" id="modalHeaderTitle">Add New Product</div>
+                
+                <div class="form-group">
+                    <label>Product Title</label>
+                    <input type="text" id="inp_title" placeholder="e.g. Modern Desk Lamp">
+                </div>
+                
+                <div style="display:flex; gap:15px;">
+                    <div class="form-group" style="flex:1">
+                        <label>Price (₹)</label>
+                        <input type="text" id="inp_price" placeholder="e.g. 1599">
+                    </div>
+                    <div class="form-group" style="flex:1">
+                        <label>Category</label>
+                        <select id="inp_cat">
+                            <option value="Bulb">Bulb</option>
+                            <option value="Lamp">Lamp</option>
+                            <option value="Smart">Smart</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" id="inp_img" placeholder="Paste image link here (https://...)">
+                    <small style="color:#888;">Tip: Use Unsplash or right-click an image online and 'Copy Image Link'.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="inp_desc" rows="4" placeholder="Enter product details..."></textarea>
+                </div>
+
+                <button id="saveProductBtn" onclick="finalAddProduct()" style="width:100%; padding:15px; background:var(--gold); border:none; font-weight:bold; border-radius:5px; font-size:1rem;">Add Product to Shop</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. DATA DATABASE (UPDATED TO MATCH HOME PAGE) ---
+        const defaultProducts = [
+            { id: 1, title: "R-Bulb 9", price: 399, cat: "Bulb", img: "https://image2url.com/images/1765476827772-f85d99d5-3614-49bf-8ca8-adbd0f98eec5.png", desc: "High brightness 9W LED Bulb suitable for every room." },
+            { id: 2, title: "PrimeRound LED Panel", price: 4999, cat: "Lamp", img: "https://image2url.com/images/1765476141566-eb3482af-174c-4c4f-a637-95727ad8394d.jpg", desc: "Elegant round LED panel for ceiling mounting." },
+            { id: 3, title: "9W LED Bulb", price: 1199, cat: "Bulb", img: "https://image2url.com/images/1765476672802-c3e4f933-1fa3-4dd4-aedd-f58b9a81fb3c.png", desc: "Premium pack of energy efficient LED bulbs." },
+            { id: 4, title: "StormGuard 200W Flood Light", price: 899, cat: "Lamp", img: "https://image2url.com/images/1765476493276-c7ab112a-d0fc-42fe-ba76-4b24855a237c.jpg", desc: "Heavy duty IP66 rated outdoor flood light." },
+            { id: 5, title: "Aurora Smart LED", price: 2199, cat: "Smart", img: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?q=80", desc: "WiFi enabled RGB bulb." },
+            { id: 6, title: "Industrial Pendant", price: 1899, cat: "Lamp", img: "https://images.unsplash.com/photo-1540932296774-3243d6e629a9?q=80", desc: "Industrial style hanging pendant." },
+            { id: 7, title: "Neon Strip Light", price: 1500, cat: "Smart", img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80", desc: "Flexible LED neon strip." }
+        ];
+
+        // Load Products from Local Storage or use Default
+        let products = JSON.parse(localStorage.getItem('lumina_products'));
+        if(!products || products.length === 0) {
+            products = defaultProducts;
+            localStorage.setItem('lumina_products', JSON.stringify(products));
+        }
+
+        let cart = JSON.parse(localStorage.getItem('lumina_cart')) || [];
+        let currentProduct = null;
+        let isDirectBuy = false; 
+        
+        // ADMIN STATE
+        let isAdminLoggedIn = false;
+        let editModeId = null;
+
+        // --- 2. PAGE NAVIGATION ---
+        function switchPage(pageName) {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(pageName + '-page').classList.add('active-page');
+            document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
+            document.getElementById('link-' + pageName).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        // --- 3. SHOP LOGIC (Modified to show Admin Buttons) ---
+        function renderShop(filter = 'All', btnElement = null) {
+            const grid = document.getElementById('shopGrid');
+            grid.innerHTML = '';
+            const filtered = filter === 'All' ? products : products.filter(p => p.cat === filter);
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'shop-card';
+                card.onclick = (e) => { 
+                    // Prevent popup if clicking buttons
+                    if(e.target.tagName !== 'BUTTON') openProductModal(p.id); 
+                };
+                
+                // Admin Buttons HTML
+                let adminHtml = '';
+                if(isAdminLoggedIn) {
+                    adminHtml = `
+                        <div class="admin-controls">
+                            <button class="btn-edit" onclick="editProduct(${p.id}, event)">Edit</button>
+                            <button class="btn-delete" onclick="deleteProduct(${p.id}, event)">Delete</button>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="shop-img-box">
+                        <img src="${p.img}" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
+                        <div class="shop-overlay"><button class="btn-quick-view" onclick="openProductModal(${p.id})">Quick View</button></div>
+                    </div>
+                    <div class="shop-info">
+                        <div class="shop-cat">${p.cat}</div>
+                        <div class="shop-name">${p.title}</div>
+                        <div class="shop-price">₹${p.price}</div>
+                        ${adminHtml}
+                        <button class="shop-add-btn" onclick="directAddToCart(${p.id})">Add to Cart</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            if(btnElement) {
+                document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+        }
+
+        // --- 4. ADMIN LOGIC (LOGIN, ADD, EDIT, DELETE) ---
+        function openAdminLogin() {
+            if(isAdminLoggedIn) {
+                // If already logged in, show Add Product modal directly
+                editModeId = null;
+                document.getElementById('modalHeaderTitle').innerText = "Add New Product";
+                document.getElementById('saveProductBtn').innerText = "Add Product to Shop";
+                clearForm();
+                
+                const prodModal = document.getElementById('addProductModal');
+                prodModal.style.display = 'flex';
+                setTimeout(() => prodModal.classList.add('open'), 10);
+            } else {
+                const modal = document.getElementById('adminLoginModal');
+                modal.style.display = 'flex';
+                setTimeout(() => modal.classList.add('open'), 10);
+            }
+        }
+
+        function verifyAdmin() {
+            const email = document.getElementById('admin-email').value;
+            if(email === "admin@lumina.com") { 
+                closeModal('adminLoginModal');
+                isAdminLoggedIn = true;
+                alert("Admin Logged In Successfully!");
+                renderShop(); // Re-render to show Delete/Edit buttons
+                
+                // Open Add Product Modal immediately after login
+                openAdminLogin();
+            } else {
+                alert("Invalid Email ID");
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('inp_title').value = '';
+            document.getElementById('inp_price').value = '';
+            document.getElementById('inp_img').value = '';
+            document.getElementById('inp_desc').value = '';
+        }
+
+        function deleteProduct(id, event) {
+            event.stopPropagation(); // Stop card click
+            if(confirm("Are you sure you want to delete this product?")) {
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('lumina_products', JSON.stringify(products));
+                renderShop();
+            }
+        }
+
+        function editProduct(id, event) {
+            event.stopPropagation(); // Stop card click
+            const prod = products.find(p => p.id === id);
+            if(!prod) return;
+
+            editModeId = id; // Set edit mode
+            
+            // Fill Form
+            document.getElementById('inp_title').value = prod.title;
+            document.getElementById('inp_price').value = prod.price;
+            document.getElementById('inp_img').value = prod.img;
+            document.getElementById('inp_cat').value = prod.cat;
+            document.getElementById('inp_desc').value = prod.desc;
+
+            // Change Modal Title
+            document.getElementById('modalHeaderTitle').innerText = "Edit Product";
+            document.getElementById('saveProductBtn').innerText = "Update Product";
+
+            const prodModal = document.getElementById('addProductModal');
+            prodModal.style.display = 'flex';
+            setTimeout(() => prodModal.classList.add('open'), 10);
+        }
+
+        function finalAddProduct() {
+            const titleInput = document.getElementById('inp_title');
+            const priceInput = document.getElementById('inp_price');
+            const imgInput = document.getElementById('inp_img');
+            const catInput = document.getElementById('inp_cat');
+            const descInput = document.getElementById('inp_desc');
+
+            const title = titleInput.value;
+            const priceVal = priceInput.value;
+            const img = imgInput.value;
+            const cat = catInput.value;
+            const desc = descInput.value;
+
+            if(title === "" || priceVal === "" || img === "") {
+                alert("Please fill Title, Price and Image URL.");
+                return;
+            }
+
+            const price = parseFloat(priceVal);
+
+            if(editModeId) {
+                // UPDATE EXISTING
+                const index = products.findIndex(p => p.id === editModeId);
+                if(index !== -1) {
+                    products[index].title = title;
+                    products[index].price = price || 0;
+                    products[index].cat = cat;
+                    products[index].img = img;
+                    products[index].desc = desc;
+                    alert("Product Updated Successfully!");
+                }
+            } else {
+                // ADD NEW
+                const newProduct = {
+                    id: Date.now(), 
+                    title: title,
+                    price: price || 0,
+                    cat: cat,
+                    img: img,
+                    desc: desc || "Premium quality lighting product."
+                };
+                products.unshift(newProduct);
+                alert("Product Added Successfully!");
+            }
+
+            localStorage.setItem('lumina_products', JSON.stringify(products));
+            renderShop();
+            closeModal('addProductModal');
+            
+            // Reset Edit Mode
+            editModeId = null;
+        }
+
+        // --- 5. MODAL LOGIC (With Wattage Fix) ---
+        function openProductModal(id) {
+            switchPage('shop');
+            // Ensure we use the global 'products' array to find the item
+            currentProduct = products.find(p => p.id === id);
+            
+            if(!currentProduct) return; // Safety check
+
+            document.getElementById('mImg').src = currentProduct.img;
+            document.getElementById('mTitle').innerText = currentProduct.title;
+            document.getElementById('mPrice').innerText = `₹${currentProduct.price}`;
+            document.getElementById('mDesc').innerText = currentProduct.desc;
+            
+            const modal = document.getElementById('productModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('open'), 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('open');
+            setTimeout(() => modal.style.display = 'none', 300);
+            document.body.style.overflow = 'auto';
+        }
+
+        // --- 6. CART LOGIC ---
+        function toggleCart() {
+            const drawer = document.getElementById('cartDrawer');
+            const overlay = document.getElementById('cartOverlay');
+            if(drawer.classList.contains('open')) {
+                drawer.classList.remove('open');
+                overlay.style.display = 'none';
+            } else {
+                drawer.classList.add('open');
+                overlay.style.display = 'block';
+                renderCart();
+            }
+        }
+
+        function directAddToCart(id) {
+            const item = products.find(p => p.id === id);
+            cart.push(item);
+            saveCart();
+            renderCart();
+            toggleCart(); 
+        }
+
+        function addToCartFromModal() {
+            cart.push(currentProduct);
+            saveCart();
+            closeModal('productModal');
+            toggleCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            saveCart();
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItemsContainer');
+            document.getElementById('cartCount').innerText = cart.length;
+            if(cart.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#888; margin-top:50px;">Your cart is empty.</p>';
+                document.getElementById('cartTotal').innerText = '₹0';
+                return;
+            }
+            container.innerHTML = '';
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <img src="${item.img}">
+                    <div class="cart-item-details">
+                        <h4>${item.title}</h4>
+                        <p>₹${item.price}</p>
+                        <button class="btn-remove" onclick="removeFromCart(${index})">Remove</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            document.getElementById('cartTotal').innerText = '₹' + total;
+        }
+
+        function saveCart() {
+            localStorage.setItem('lumina_cart', JSON.stringify(cart));
+            document.getElementById('cartCount').innerText = cart.length;
+        }
+
+        // --- 7. CHECKOUT & WHATSAPP LOGIC ---
+        function buyNow() {
+            isDirectBuy = true;
+            document.getElementById('checkoutTotalAmount').innerText = '₹' + currentProduct.price;
+            closeModal('productModal');
+            const modal = document.getElementById('checkoutModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('open'), 10);
+        }
+
+        function openCheckout() {
+            if(cart.length === 0) return alert("Cart is empty!");
+            isDirectBuy = false;
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('checkoutTotalAmount').innerText = '₹' + total;
+            toggleCart();
+            const modal = document.getElementById('checkoutModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('open'), 10);
+        }
+
+        function confirmOrder() {
+            const name = document.getElementById('c-name').value;
+            const phone = document.getElementById('c-phone').value;
+            const address = document.getElementById('c-address').value;
+            const payment = document.getElementById('c-payment').value;
+
+            if(!name || !phone || !address) {
+                alert("Please fill in all details.");
+                return;
+            }
+
+            const btn = document.getElementById('placeOrderBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<div class="loader"></div> Processing...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                let orderItems = "";
+                let totalAmount = 0;
+
+                if(isDirectBuy && currentProduct) {
+                    orderItems = `1. ${currentProduct.title} - ₹${currentProduct.price}`;
+                    totalAmount = currentProduct.price;
+                } else {
+                    cart.forEach((item, index) => {
+                        orderItems += `${index + 1}. ${item.title} - ₹${item.price}%0a`;
+                    });
+                    totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
+                }
+
+                const message = `*NEW ORDER REQUEST* %0a%0a*Customer Details:*%0aName: ${name}%0aPhone: ${phone}%0aAddress: ${address}%0aPayment: ${payment}%0a%0a*Order Details:*%0a${orderItems}%0a--------------------%0a*Total Bill: ₹${totalAmount}*`;
+
+                const whatsappUrl = `https://wa.me/919376917149?text=${message}`;
+                
+                if(!isDirectBuy) {
+                    cart = [];
+                    saveCart();
+                    renderCart();
+                }
+
+                window.location.href = whatsappUrl;
+
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                closeModal('checkoutModal');
+            }, 2000);
+        }
+
+        // --- 8. HOME SLIDER ---
+        let slideIndex = 0;
+        const slides = document.querySelectorAll(".slide");
+        const dots = document.querySelectorAll(".dot");
+        function showSlides() {
+            for (let i = 0; i < slides.length; i++) { slides[i].classList.remove("active"); dots[i].classList.remove("active"); }
+            slideIndex++; if (slideIndex > slides.length) { slideIndex = 1 }
+            slides[slideIndex - 1].classList.add("active"); dots[slideIndex - 1].classList.add("active");
+            setTimeout(showSlides, 4000);
+        }
+        function currentSlide(n) { slideIndex = n - 1; for (let i = 0; i < slides.length; i++) { slides[i].classList.remove("active"); dots[i].classList.remove("active"); } slides[slideIndex].classList.add("active"); dots[slideIndex].classList.add("active"); }
+        showSlides();
+
+        // Init
+        renderShop();
+        document.getElementById('cartCount').innerText = cart.length;
+
+    </script>
+</body>
+</html>
