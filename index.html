@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUMAX | Premium Lighting Store</title>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Manrope:wght@300;400;600;700&display=swap" rel="stylesheet">
     <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <style>
         /* --- 1. GLOBAL SETTINGS --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; outline: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; outline: none; -webkit-tap-highlight-color: transparent; }
         :root {
             --bg-dark: #050505;
             --bg-light: #ffffff;
@@ -84,15 +84,12 @@
         .section-padding { padding: 100px 5%; }
         .sec-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px; }
         .sec-title { font-size: 3rem; }
-        
-        /* Grid Container (Desktop) */
         .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 350px 350px; gap: 20px; }
         .g-item { position: relative; border-radius: 15px; overflow: hidden; cursor: pointer; }
         .g-item img { transition: 0.5s; }
         .g-item:hover img { transform: scale(1.1); }
         .g-item-1 { grid-column: 1 / 2; grid-row: 1 / 3; } 
         .g-item-2 { grid-column: 2 / 4; grid-row: 1 / 2; } 
-        
         .price-badge { position: absolute; bottom: 20px; left: 20px; background: white; padding: 8px 20px; border-radius: 30px; font-weight: 600; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
         .add-btn-small { background: var(--gold); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition:0.3s; }
         .add-btn-small:hover { background: black; color: white; }
@@ -111,40 +108,82 @@
         .owner-content h2 { font-size: 2.5rem; margin-bottom: 20px; }
         .signature { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-style: italic; color: #333; }
 
-        /* --- 5. SHOP PAGE STYLES --- */
+        /* --- 5. SHOP PAGE STYLES (UPDATED FOR PROFESSIONAL & MOBILE LOOK) --- */
         .shop-wrapper { padding: 120px 5% 50px; background: #fff; min-height: 100vh; }
         .shop-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
         .shop-title h1 { font-size: 2.5rem; }
         .shop-title p { color: #666; }
         
-        /* Search Bar Style */
-        .search-container { width: 100%; margin: 20px 0; }
-        .search-input { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Manrope'; font-size: 1rem; background: #f9f9f9; }
-        .search-input:focus { border-color: var(--gold); background: white; }
-
-        .filters-row { display: flex; gap: 15px; }
-        .filter-chip { padding: 8px 20px; border: 1px solid #ddd; border-radius: 30px; background: white; transition: 0.3s; font-size: 0.9rem; }
+        .filters-row { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
+        .filters-row::-webkit-scrollbar { display: none; } /* Hide scrollbar */
+        .filter-chip { padding: 8px 20px; border: 1px solid #ddd; border-radius: 30px; background: white; transition: 0.3s; font-size: 0.9rem; white-space: nowrap; }
         .filter-chip:hover, .filter-chip.active { background: black; color: white; border-color: black; }
 
-        .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 40px; }
-        .shop-card { border: 1px solid #eee; border-radius: 10px; overflow: hidden; transition: 0.3s; position: relative; background: white; }
-        .shop-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-        .shop-img-box { height: 280px; width: 100%; background: #f9f9f9; position: relative; }
+        /* --- UPDATED GRID SYSTEM FOR SHOP --- */
+        .shop-grid { 
+            display: grid; 
+            /* Desktop default */
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+            gap: 30px; 
+        }
+
+        /* PROFESSIONAL CARD STYLING */
+        .shop-card { 
+            border: 1px solid transparent; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            transition: 0.3s; 
+            position: relative; 
+            background: white; 
+            /* Clean shadow for depth */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .shop-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-color: #eee; }
+        
+        .shop-img-box { 
+            height: 280px; 
+            width: 100%; 
+            background: #f9f9f9; 
+            position: relative; 
+            overflow: hidden;
+        }
         .shop-overlay { position: absolute; bottom: 10px; left: 0; width: 100%; text-align: center; opacity: 0; transition: 0.3s; transform: translateY(10px); }
         .shop-card:hover .shop-overlay { opacity: 1; transform: translateY(0); }
         .btn-quick-view { background: white; padding: 8px 20px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: none; }
         
-        .shop-info { padding: 15px; }
-        .shop-cat { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-        .shop-name { font-weight: 600; margin: 5px 0; font-size: 1.05rem; }
-        .shop-price { color: var(--gold); font-weight: bold; font-size: 1.1rem; }
-        .shop-add-btn { width: 100%; margin-top: 15px; background: black; color: white; padding: 10px; border: none; border-radius: 5px; font-weight: 600; }
+        /* CLEANER INFO SECTION */
+        .shop-info { padding: 12px 15px 15px; }
+        
+        .shop-cat { 
+            font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 4px;
+        }
+        
+        .shop-name { 
+            font-weight: 700; margin: 0 0 6px 0; font-size: 1rem; color: #222;
+            /* Truncate text if too long */
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        
+        .shop-price-row {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 5px;
+        }
+        
+        .shop-price { 
+            color: #000; font-weight: 700; font-size: 1.1rem; 
+        }
+
+        .shop-add-btn { 
+            background: black; color: white; padding: 8px 15px; 
+            border: none; border-radius: 6px; font-weight: 600; font-size: 0.85rem; 
+            width: 100%; margin-top: 10px; transition: 0.2s;
+        }
         .shop-add-btn:hover { background: var(--gold); color: black; }
 
         /* Admin Controls */
-        .admin-controls { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-edit { flex: 1; background: #3498db; color: white; border: none; padding: 5px; border-radius: 4px; font-size: 0.8rem; }
-        .btn-delete { flex: 1; background: #e74c3c; color: white; border: none; padding: 5px; border-radius: 4px; font-size: 0.8rem; }
+        .admin-controls { display: flex; gap: 5px; margin-top: 10px; }
+        .btn-edit, .btn-delete { flex: 1; border: none; padding: 5px; border-radius: 4px; font-size: 0.75rem; color: white; }
+        .btn-edit { background: #3498db; }
+        .btn-delete { background: #e74c3c; }
 
         /* --- 6. ABOUT PAGE STYLES --- */
         .about-wrapper { background: white; min-height: 100vh; }
@@ -211,48 +250,45 @@
         .f-col h3 { font-size: 2rem; margin-bottom: 20px; color: var(--gold); }
         .f-col ul li { margin-bottom: 10px; color: #888; cursor: pointer; }
 
-        /* ================= MOBILE OPTIMIZATION (AMAZON 2-COL STYLE) ================= */
+        /* ================= MOBILE OPTIMIZATION (CRITICAL FIXES) ================= */
         @media (max-width: 768px) {
-            h1 { font-size: 2.2rem !important; }
-            h2 { font-size: 1.8rem !important; }
-            
-            nav { flex-direction: column; gap: 10px; padding: 15px 5%; }
-            .menu { display: flex; gap: 15px; font-size: 0.8rem; overflow-x: auto; width: 100%; white-space: nowrap; }
-            
-            /* Home Page Grid - 2 Columns */
-            .grid-container { 
-                display: grid; 
-                grid-template-columns: 1fr 1fr; /* 2 Columns forced */
-                grid-template-rows: auto;
-                gap: 10px;
-                height: auto;
-            }
-            .g-item { height: 280px; }
-            .g-item-1, .g-item-2, .g-item-3, .g-item-4 { grid-column: auto; grid-row: auto; } /* Reset laptop layout */
-
-            /* Shop Page Grid - 2 Columns (Amazon Style) */
-            .shop-grid { 
-                display: grid;
-                grid-template-columns: repeat(2, 1fr); /* 2 items per line */
-                gap: 10px; 
-            } 
-            .shop-img-box { height: 180px; } /* Smaller images for mobile */
-            .shop-card { border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-            .shop-info { padding: 10px; }
-            .shop-name { font-size: 0.9rem; margin-bottom: 5px; }
-            .shop-price { font-size: 1rem; }
-            
-            /* Admin Buttons stack on mobile */
-            .admin-controls { flex-direction: column; gap: 5px; }
-
-            .feature-dark, .owner-section, .founder-big-section { flex-direction: column; text-align: center; }
-            .fd-img, .owner-img-box, .founder-large-img { height: 350px; width: 100%; margin-bottom: 20px; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .grid-container { display: flex; flex-direction: column; height: auto; }
+            .g-item { height: 300px; }
+            .feature-dark, .owner-section, .footer-grid { flex-direction: column; text-align: center; }
+            .founder-big-section { flex-direction: column; text-align: center; padding: 50px 5%; }
+            .founder-large-img { height: 400px; width: 100%; }
             .values-section { grid-template-columns: 1fr; }
-
-            .modal-content { width: 95%; max-height: 85vh; grid-template-columns: 1fr; overflow-y: auto; display: block; }
+            .menu { display: none; }
+            .modal-content { grid-template-columns: 1fr; }
             .m-img-box { height: 250px; }
-            .cart-drawer { width: 85%; right: -100%; }
-            .footer-grid { grid-template-columns: 1fr; gap: 30px; text-align: center; }
+            .about-hero h1 { font-size: 2.5rem; }
+            
+            /* --- FORCE 2 PRODUCTS PER LINE ON MOBILE --- */
+            .shop-wrapper { padding-top: 100px; padding-left: 3%; padding-right: 3%; }
+            
+            .shop-grid {
+                grid-template-columns: repeat(2, 1fr) !important; /* Force 2 Columns */
+                gap: 12px !important; /* Smaller gap */
+            }
+
+            .shop-card {
+                border-radius: 6px; /* Slightly tighter radius */
+            }
+
+            .shop-img-box {
+                height: 160px; /* Smaller height for mobile */
+            }
+
+            /* Compact text for mobile */
+            .shop-info { padding: 10px; }
+            .shop-name { font-size: 0.85rem; margin-bottom: 4px; }
+            .shop-cat { font-size: 0.6rem; }
+            .shop-price { font-size: 0.95rem; }
+            .shop-add-btn { font-size: 0.75rem; padding: 6px; margin-top: 8px; }
+            
+            /* Hide the overlay button on mobile (use main card click) */
+            .shop-overlay { display: none; }
         }
     </style>
 </head>
@@ -313,24 +349,22 @@
                 <a onclick="switchPage('shop')" style="border-bottom:1px solid #000;">View All Products ↗</a>
             </div>
 
-            <!-- HARDCODED IDs "1", "2", "3", "4" MUST MATCH FIRESTORE IDs for Click to work -->
-            <!-- We will seed database with these String IDs -->
             <div class="grid-container">
-                <div class="g-item g-item-1" onclick="openProductModal('1')">
+                <div class="g-item g-item-1" onclick="openProductModal(1)">
                     <img src="https://image2url.com/images/1765476827772-f85d99d5-3614-49bf-8ca8-adbd0f98eec5.png">
                     <div class="price-badge"><div>R-Bulb 9<br> <b>₹399</b></div><div class="add-btn-small">+</div></div>
                 </div>
-                <div class="g-item g-item-2" onclick="openProductModal('2')">
+                <div class="g-item g-item-2" onclick="openProductModal(2)">
                     <img src="https://image2url.com/images/1765476141566-eb3482af-174c-4c4f-a637-95727ad8394d.jpg">
                     <div class="price-badge"><div> PrimeRound LED Panel <br> <b>₹4,999</b></div><div class="add-btn-small">+</div></div>
                 </div>
-                <div class="g-item g-item-3" onclick="openProductModal('3')">
+                <div class="g-item g-item-3" onclick="openProductModal(3)">
                     <img src="https://image2url.com/images/1765476672802-c3e4f933-1fa3-4dd4-aedd-f58b9a81fb3c.png">
                     <div class="price-badge"><div>9W LED Bulb <br> <b>₹1,199</b></div><div class="add-btn-small">+</div></div>
                 </div>
-                <div class="g-item g-item-4" onclick="openProductModal('4')">
+                <div class="g-item g-item-4" onclick="openProductModal(4)">
                     <img src="https://image2url.com/images/1765476493276-c7ab112a-d0fc-42fe-ba76-4b24855a237c.jpg">
-                    <div class="price-badge"><div>StormGuard Flood Light <br> <b>₹899</b></div><div class="add-btn-small">+</div></div>
+                    <div class="price-badge"><div>StormGuard 200W Flood Light <br> <b>₹899</b></div><div class="add-btn-small">+</div></div>
                 </div>
             </div>
         </section>
@@ -371,12 +405,6 @@
                     <h1>Shop Collection</h1>
                     <p>Explore our wide range of premium lighting solutions.</p>
                 </div>
-                
-                <!-- NEW SEARCH BAR -->
-                <div class="search-container">
-                    <input type="text" id="shopSearchInput" class="search-input" placeholder="Search products..." onkeyup="filterProducts()">
-                </div>
-
                 <div class="filters-row">
                     <button class="filter-chip active" onclick="renderShop('All', this)">All Products</button>
                     <button class="filter-chip" onclick="renderShop('Bulb', this)">Bulbs</button>
@@ -387,8 +415,7 @@
 
             <!-- Dynamic Product Grid -->
             <div class="shop-grid" id="shopGrid">
-                <!-- Javascript will load items here from Firebase -->
-                <p style="text-align:center; width:100%;">Loading products from database...</p>
+                <!-- Javascript will load items here -->
             </div>
 
             <!-- ADMIN BUTTON (Very Small at bottom) -->
@@ -595,59 +622,29 @@
                 </div>
 
                 <button id="saveProductBtn" onclick="finalAddProduct()" style="width:100%; padding:15px; background:var(--gold); border:none; font-weight:bold; border-radius:5px; font-size:1rem;">Add Product to Shop</button>
-                
-                <!-- ONE TIME SETUP BUTTON -->
-                <br><br>
-                <div style="border-top:1px solid #eee; padding-top:10px; text-align:center;">
-                    <p style="font-size:0.8rem; color:red;">Database Empty?</p>
-                    <button onclick="seedDatabase()" style="background:#eee; color:black; padding:5px 10px; border:none; font-size:0.8rem;">Click to Upload Default Products</button>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- FIREBASE SDKs -->
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
-        // =================================================================
-        // PASTE YOUR FIREBASE CONFIGURATION HERE
-        // =================================================================
-        const firebaseConfig = {
-  apiKey: "AIzaSyBKDmQ2Hwo1as05Ku1ukpdtje55sVWCVLs",
-  authDomain: "lumax-61862.firebaseapp.com",
-  projectId: "lumax-61862",
-  storageBucket: "lumax-61862.firebasestorage.app",
-  messagingSenderId: "289306626484",
-  appId: "1:289306626484:web:5ce67bb27619b11f690ae1",
-  measurementId: "G-9GBQQMZ7MK"
-};
-        // =================================================================
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Make DB Functions Global for other scripts
-        window.db = db;
-        window.collection = collection;
-        window.getDocs = getDocs;
-        window.addDoc = addDoc;
-        window.updateDoc = updateDoc;
-        window.deleteDoc = deleteDoc;
-        window.doc = doc;
-        window.setDoc = setDoc;
-
-        // Load Products on Start
-        window.loadProductsFromFirebase();
-    </script>
-
     <script>
-        // --- 1. DATA HANDLING (FIREBASE MODE) ---
-        
-        let products = []; // Will be loaded from Firebase
+        // --- 1. DATA DATABASE (UPDATED TO MATCH HOME PAGE) ---
+        const defaultProducts = [
+            { id: 1, title: "R-Bulb 9", price: 399, cat: "Bulb", img: "https://image2url.com/images/1765476827772-f85d99d5-3614-49bf-8ca8-adbd0f98eec5.png", desc: "High brightness 9W LED Bulb suitable for every room." },
+            { id: 2, title: "PrimeRound LED Panel", price: 4999, cat: "Lamp", img: "https://image2url.com/images/1765476141566-eb3482af-174c-4c4f-a637-95727ad8394d.jpg", desc: "Elegant round LED panel for ceiling mounting." },
+            { id: 3, title: "9W LED Bulb", price: 1199, cat: "Bulb", img: "https://image2url.com/images/1765476672802-c3e4f933-1fa3-4dd4-aedd-f58b9a81fb3c.png", desc: "Premium pack of energy efficient LED bulbs." },
+            { id: 4, title: "StormGuard 200W Flood Light", price: 899, cat: "Lamp", img: "https://image2url.com/images/1765476493276-c7ab112a-d0fc-42fe-ba76-4b24855a237c.jpg", desc: "Heavy duty IP66 rated outdoor flood light." },
+            { id: 5, title: "Aurora Smart LED", price: 2199, cat: "Smart", img: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?q=80", desc: "WiFi enabled RGB bulb." },
+            { id: 6, title: "Industrial Pendant", price: 1899, cat: "Lamp", img: "https://images.unsplash.com/photo-1540932296774-3243d6e629a9?q=80", desc: "Industrial style hanging pendant." },
+            { id: 7, title: "Neon Strip Light", price: 1500, cat: "Smart", img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80", desc: "Flexible LED neon strip." }
+        ];
+
+        // Load Products from Local Storage or use Default
+        let products = JSON.parse(localStorage.getItem('lumina_products'));
+        if(!products || products.length === 0) {
+            products = defaultProducts;
+            localStorage.setItem('lumina_products', JSON.stringify(products));
+        }
+
         let cart = JSON.parse(localStorage.getItem('lumina_cart')) || [];
         let currentProduct = null;
         let isDirectBuy = false; 
@@ -655,56 +652,6 @@
         // ADMIN STATE
         let isAdminLoggedIn = false;
         let editModeId = null;
-
-        // FETCH PRODUCTS
-        async function loadProductsFromFirebase() {
-            try {
-                // Check if Firebase is ready
-                if(!window.db) {
-                    setTimeout(loadProductsFromFirebase, 500); // Retry if SDK not loaded
-                    return;
-                }
-
-                const querySnapshot = await window.getDocs(window.collection(window.db, "products"));
-                products = [];
-                querySnapshot.forEach((doc) => {
-                    products.push({ id: doc.id, ...doc.data() });
-                });
-                
-                // Sort by ID (to keep 1,2,3,4 at top for home page consistency)
-                products.sort((a, b) => a.id - b.id);
-
-                renderShop();
-                console.log("Products Loaded:", products);
-            } catch (e) {
-                console.error("Error loading products: ", e);
-                document.getElementById('shopGrid').innerHTML = '<p style="text-align:center">Failed to load products. Check Firebase Config.</p>';
-            }
-        }
-
-        // ONE TIME SEED FUNCTION (Run from Admin Panel)
-        const defaultProducts = [
-            { id: "1", title: "R-Bulb 9", price: 399, cat: "Bulb", img: "https://image2url.com/images/1765476827772-f85d99d5-3614-49bf-8ca8-adbd0f98eec5.png", desc: "High brightness 9W LED Bulb suitable for every room." },
-            { id: "2", title: "PrimeRound LED Panel", price: 4999, cat: "Lamp", img: "https://image2url.com/images/1765476141566-eb3482af-174c-4c4f-a637-95727ad8394d.jpg", desc: "Elegant round LED panel for ceiling mounting." },
-            { id: "3", title: "9W LED Bulb", price: 1199, cat: "Bulb", img: "https://image2url.com/images/1765476672802-c3e4f933-1fa3-4dd4-aedd-f58b9a81fb3c.png", desc: "Premium pack of energy efficient LED bulbs." },
-            { id: "4", title: "StormGuard 200W Flood Light", price: 899, cat: "Lamp", img: "https://image2url.com/images/1765476493276-c7ab112a-d0fc-42fe-ba76-4b24855a237c.jpg", desc: "Heavy duty IP66 rated outdoor flood light." },
-            { id: "5", title: "Aurora Smart LED", price: 2199, cat: "Smart", img: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?q=80", desc: "WiFi enabled RGB bulb." },
-            { id: "6", title: "Industrial Pendant", price: 1899, cat: "Lamp", img: "https://images.unsplash.com/photo-1540932296774-3243d6e629a9?q=80", desc: "Industrial style hanging pendant." },
-            { id: "7", title: "Neon Strip Light", price: 1500, cat: "Smart", img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80", desc: "Flexible LED neon strip." }
-        ];
-
-        async function seedDatabase() {
-            if(confirm("This will upload default products to your database. Continue?")) {
-                for (let p of defaultProducts) {
-                    // Use setDoc to force specific IDs (1, 2, 3...) so Home page links work
-                    await window.setDoc(window.doc(window.db, "products", p.id), {
-                        title: p.title, price: p.price, cat: p.cat, img: p.img, desc: p.desc
-                    });
-                }
-                alert("Database Seeded! Refresh Page.");
-                loadProductsFromFirebase();
-            }
-        }
 
         // --- 2. PAGE NAVIGATION ---
         function switchPage(pageName) {
@@ -715,64 +662,44 @@
             window.scrollTo(0,0);
         }
 
-        // --- 3. SHOP LOGIC & SEARCH ---
-        function filterProducts() {
-            const query = document.getElementById('shopSearchInput').value.toLowerCase();
-            renderShop('All', null, query);
-        }
-
-        function renderShop(filter = 'All', btnElement = null, searchQuery = '') {
+        // --- 3. SHOP LOGIC (Modified for Professional Look) ---
+        function renderShop(filter = 'All', btnElement = null) {
             const grid = document.getElementById('shopGrid');
             grid.innerHTML = '';
-            
-            if(products.length === 0) {
-                grid.innerHTML = '<p style="text-align:center; width:100%;">No products found in Database.</p>';
-                return;
-            }
-
-            // Filter by Category first
-            let filtered = filter === 'All' ? products : products.filter(p => p.cat === filter);
-            
-            // Filter by Search Query
-            if(searchQuery) {
-                filtered = filtered.filter(p => p.title.toLowerCase().includes(searchQuery));
-            }
-            
-            if(filtered.length === 0) {
-                grid.innerHTML = '<p style="text-align:center; width:100%; color:#888;">No matching products.</p>';
-                return;
-            }
-
+            const filtered = filter === 'All' ? products : products.filter(p => p.cat === filter);
             filtered.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'shop-card';
                 card.onclick = (e) => { 
+                    // Prevent popup if clicking buttons
                     if(e.target.tagName !== 'BUTTON') openProductModal(p.id); 
                 };
                 
                 // Admin Buttons HTML
                 let adminHtml = '';
                 if(isAdminLoggedIn) {
-                    // IDs are strings in Firestore, so we wrap them in quotes
                     adminHtml = `
                         <div class="admin-controls">
-                            <button class="btn-edit" onclick="editProduct('${p.id}', event)">Edit</button>
-                            <button class="btn-delete" onclick="deleteProduct('${p.id}', event)">Delete</button>
+                            <button class="btn-edit" onclick="editProduct(${p.id}, event)">Edit</button>
+                            <button class="btn-delete" onclick="deleteProduct(${p.id}, event)">Delete</button>
                         </div>
                     `;
                 }
 
+                // REFINED HTML STRUCTURE FOR CARD
                 card.innerHTML = `
                     <div class="shop-img-box">
                         <img src="${p.img}" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
-                        <div class="shop-overlay"><button class="btn-quick-view" onclick="openProductModal('${p.id}')">Quick View</button></div>
+                        <div class="shop-overlay"><button class="btn-quick-view" onclick="openProductModal(${p.id})">Quick View</button></div>
                     </div>
                     <div class="shop-info">
                         <div class="shop-cat">${p.cat}</div>
                         <div class="shop-name">${p.title}</div>
-                        <div class="shop-price">₹${p.price}</div>
+                        <div class="shop-price-row">
+                            <div class="shop-price">₹${p.price}</div>
+                        </div>
                         ${adminHtml}
-                        <button class="shop-add-btn" onclick="directAddToCart('${p.id}')">Add to Cart</button>
+                        <button class="shop-add-btn" onclick="directAddToCart(${p.id})">Add to Cart</button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -786,6 +713,7 @@
         // --- 4. ADMIN LOGIC (LOGIN, ADD, EDIT, DELETE) ---
         function openAdminLogin() {
             if(isAdminLoggedIn) {
+                // If already logged in, show Add Product modal directly
                 editModeId = null;
                 document.getElementById('modalHeaderTitle').innerText = "Add New Product";
                 document.getElementById('saveProductBtn').innerText = "Add Product to Shop";
@@ -806,8 +734,10 @@
             if(email === "admin@lumina.com") { 
                 closeModal('adminLoginModal');
                 isAdminLoggedIn = true;
-                alert("Admin Logged In Successfully! You can now Edit/Delete products.");
-                renderShop(); 
+                alert("Admin Logged In Successfully!");
+                renderShop(); // Re-render to show Delete/Edit buttons
+                
+                // Open Add Product Modal immediately after login
                 openAdminLogin();
             } else {
                 alert("Invalid Email ID");
@@ -821,27 +751,30 @@
             document.getElementById('inp_desc').value = '';
         }
 
-        async function deleteProduct(id, event) {
-            event.stopPropagation();
-            if(confirm("Permanently delete this product from Database?")) {
-                await window.deleteDoc(window.doc(window.db, "products", id));
-                loadProductsFromFirebase(); // Reload from DB
+        function deleteProduct(id, event) {
+            event.stopPropagation(); // Stop card click
+            if(confirm("Are you sure you want to delete this product?")) {
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('lumina_products', JSON.stringify(products));
+                renderShop();
             }
         }
 
         function editProduct(id, event) {
-            event.stopPropagation();
+            event.stopPropagation(); // Stop card click
             const prod = products.find(p => p.id === id);
             if(!prod) return;
 
-            editModeId = id; 
+            editModeId = id; // Set edit mode
             
+            // Fill Form
             document.getElementById('inp_title').value = prod.title;
             document.getElementById('inp_price').value = prod.price;
             document.getElementById('inp_img').value = prod.img;
             document.getElementById('inp_cat').value = prod.cat;
             document.getElementById('inp_desc').value = prod.desc;
 
+            // Change Modal Title
             document.getElementById('modalHeaderTitle').innerText = "Edit Product";
             document.getElementById('saveProductBtn').innerText = "Update Product";
 
@@ -850,12 +783,18 @@
             setTimeout(() => prodModal.classList.add('open'), 10);
         }
 
-        async function finalAddProduct() {
-            const title = document.getElementById('inp_title').value;
-            const priceVal = document.getElementById('inp_price').value;
-            const img = document.getElementById('inp_img').value;
-            const cat = document.getElementById('inp_cat').value;
-            const desc = document.getElementById('inp_desc').value;
+        function finalAddProduct() {
+            const titleInput = document.getElementById('inp_title');
+            const priceInput = document.getElementById('inp_price');
+            const imgInput = document.getElementById('inp_img');
+            const catInput = document.getElementById('inp_cat');
+            const descInput = document.getElementById('inp_desc');
+
+            const title = titleInput.value;
+            const priceVal = priceInput.value;
+            const img = imgInput.value;
+            const cat = catInput.value;
+            const desc = descInput.value;
 
             if(title === "" || priceVal === "" || img === "") {
                 alert("Please fill Title, Price and Image URL.");
@@ -863,52 +802,47 @@
             }
 
             const price = parseFloat(priceVal);
-            const btn = document.getElementById('saveProductBtn');
-            btn.innerText = "Saving...";
-            btn.disabled = true;
 
-            try {
-                const data = {
+            if(editModeId) {
+                // UPDATE EXISTING
+                const index = products.findIndex(p => p.id === editModeId);
+                if(index !== -1) {
+                    products[index].title = title;
+                    products[index].price = price || 0;
+                    products[index].cat = cat;
+                    products[index].img = img;
+                    products[index].desc = desc;
+                    alert("Product Updated Successfully!");
+                }
+            } else {
+                // ADD NEW
+                const newProduct = {
+                    id: Date.now(), 
                     title: title,
                     price: price || 0,
                     cat: cat,
                     img: img,
                     desc: desc || "Premium quality lighting product."
                 };
-
-                if(editModeId) {
-                    // Update existing document
-                    await window.updateDoc(window.doc(window.db, "products", editModeId), data);
-                    alert("Product Updated!");
-                } else {
-                    // Add new document (auto-generated ID)
-                    await window.addDoc(window.collection(window.db, "products"), data);
-                    alert("Product Added!");
-                }
-
-                closeModal('addProductModal');
-                loadProductsFromFirebase(); // Refresh Grid
-            } catch (e) {
-                console.error(e);
-                alert("Error saving to database.");
+                products.unshift(newProduct);
+                alert("Product Added Successfully!");
             }
 
-            btn.innerText = "Save Product";
-            btn.disabled = false;
+            localStorage.setItem('lumina_products', JSON.stringify(products));
+            renderShop();
+            closeModal('addProductModal');
+            
+            // Reset Edit Mode
             editModeId = null;
         }
 
         // --- 5. MODAL LOGIC (With Wattage Fix) ---
         function openProductModal(id) {
             switchPage('shop');
-            // Ensure ID comparison is correct (String vs String)
-            currentProduct = products.find(p => p.id == id);
+            // Ensure we use the global 'products' array to find the item
+            currentProduct = products.find(p => p.id === id);
             
-            if(!currentProduct) {
-                // Fallback for load delay
-                console.log("Product not found yet, retrying...");
-                return; 
-            }
+            if(!currentProduct) return; // Safety check
 
             document.getElementById('mImg').src = currentProduct.img;
             document.getElementById('mTitle').innerText = currentProduct.title;
@@ -943,22 +877,18 @@
         }
 
         function directAddToCart(id) {
-            const item = products.find(p => p.id == id);
-            if(item) {
-                cart.push(item);
-                saveCart();
-                renderCart();
-                toggleCart(); 
-            }
+            const item = products.find(p => p.id === id);
+            cart.push(item);
+            saveCart();
+            renderCart();
+            toggleCart(); 
         }
 
         function addToCartFromModal() {
-            if(currentProduct) {
-                cart.push(currentProduct);
-                saveCart();
-                closeModal('productModal');
-                toggleCart();
-            }
+            cart.push(currentProduct);
+            saveCart();
+            closeModal('productModal');
+            toggleCart();
         }
 
         function removeFromCart(index) {
@@ -1001,14 +931,12 @@
 
         // --- 7. CHECKOUT & WHATSAPP LOGIC ---
         function buyNow() {
-            if(currentProduct) {
-                isDirectBuy = true;
-                document.getElementById('checkoutTotalAmount').innerText = '₹' + currentProduct.price;
-                closeModal('productModal');
-                const modal = document.getElementById('checkoutModal');
-                modal.style.display = 'flex';
-                setTimeout(() => modal.classList.add('open'), 10);
-            }
+            isDirectBuy = true;
+            document.getElementById('checkoutTotalAmount').innerText = '₹' + currentProduct.price;
+            closeModal('productModal');
+            const modal = document.getElementById('checkoutModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('open'), 10);
         }
 
         function openCheckout() {
@@ -1084,6 +1012,7 @@
         showSlides();
 
         // Init
+        renderShop();
         document.getElementById('cartCount').innerText = cart.length;
 
     </script>
