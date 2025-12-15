@@ -87,15 +87,50 @@
         
         /* Grid Container (Desktop) */
         .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 350px 350px; gap: 20px; }
-        .g-item { position: relative; border-radius: 15px; overflow: hidden; cursor: pointer; }
-        .g-item img { transition: 0.5s; }
+        .g-item { position: relative; border-radius: 15px; overflow: hidden; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .g-item img { transition: 0.5s; width: 100%; height: 100%; }
         .g-item:hover img { transform: scale(1.1); }
         .g-item-1 { grid-column: 1 / 2; grid-row: 1 / 3; } 
         .g-item-2 { grid-column: 2 / 4; grid-row: 1 / 2; } 
         
-        .price-badge { position: absolute; bottom: 20px; left: 20px; background: white; padding: 8px 20px; border-radius: 30px; font-weight: 600; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-        .add-btn-small { background: var(--gold); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition:0.3s; }
-        .add-btn-small:hover { background: black; color: white; }
+        /* Glassmorphism Price Tag */
+        .price-badge { 
+            position: absolute; 
+            bottom: 15px; 
+            left: 15px; 
+            right: 15px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 10px;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .price-badge div {
+            font-family: 'Manrope', sans-serif;
+            line-height: 1.3;
+            font-size: 0.95rem;
+            color: #333;
+        }
+        .price-badge b {
+            font-size: 1.1rem;
+            color: black;
+        }
+        .add-btn-small { 
+            background: black; 
+            color: white;
+            width: 35px; height: 35px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.2rem; 
+            transition:0.3s; 
+        }
+        .add-btn-small:hover { background: var(--gold); color: black; }
 
         .feature-dark { background: #111; color: white; padding: 100px 5%; display: flex; align-items: center; gap: 50px; }
         .fd-img { flex: 1; height: 500px; border-radius: 20px; overflow: hidden; }
@@ -127,28 +162,31 @@
         .filter-chip:hover, .filter-chip.active { background: black; color: white; border-color: black; }
 
         .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 40px; }
-        .shop-card { border: 1px solid #eee; border-radius: 10px; overflow: hidden; transition: 0.3s; position: relative; background: white; }
-        .shop-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .shop-card { border: 1px solid #eee; border-radius: 12px; overflow: hidden; transition: 0.3s; position: relative; background: white; }
+        .shop-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--gold); }
         .shop-img-box { height: 280px; width: 100%; background: #f9f9f9; position: relative; }
         .shop-overlay { position: absolute; bottom: 10px; left: 0; width: 100%; text-align: center; opacity: 0; transition: 0.3s; transform: translateY(10px); }
         .shop-card:hover .shop-overlay { opacity: 1; transform: translateY(0); }
         .btn-quick-view { background: white; padding: 8px 20px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: none; }
         
-        .shop-info { padding: 15px; }
-        .shop-cat { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-        .shop-name { font-weight: 600; margin: 5px 0; font-size: 1.05rem; }
+        .shop-info { padding: 18px; }
+        .shop-cat { font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .shop-name { font-weight: 700; margin: 5px 0 8px; font-size: 1.1rem; color: #222; font-family: 'Playfair Display', serif; }
         
-        /* NEW: Pricing Style for Amazon Look */
-        .shop-price-box { display: flex; align-items: baseline; gap: 10px; margin-top: 5px; }
-        .shop-price-main { color: var(--gold); font-weight: bold; font-size: 1.2rem; }
-        .shop-price-mrp { text-decoration: line-through; color: #888; font-size: 0.9rem; }
-        .shop-discount { color: #e74c3c; font-size: 0.8rem; font-weight: bold; }
+        .shop-price-box { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+        .shop-price-main { color: #000; font-weight: 800; font-size: 1.3rem; }
+        .shop-price-mrp { text-decoration: line-through; color: #999; font-size: 0.9rem; }
+        .shop-discount { background: #e74c3c; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
 
-        .shop-add-btn { width: 100%; margin-top: 15px; background: black; color: white; padding: 10px; border: none; border-radius: 5px; font-weight: 600; }
-        .shop-add-btn:hover { background: var(--gold); color: black; }
+        /* NEW BUTTON STYLES FOR SHOP */
+        .shop-actions { display: flex; gap: 10px; margin-top: 15px; }
+        .shop-add-btn { flex: 1; background: black; color: white; padding: 10px; border: none; border-radius: 6px; font-weight: 700; transition: 0.3s; font-size: 0.9rem; }
+        .shop-add-btn:hover { opacity: 0.8; }
+        .shop-buy-btn { flex: 1; background: var(--gold); color: black; padding: 10px; border: none; border-radius: 6px; font-weight: 700; transition: 0.3s; font-size: 0.9rem; }
+        .shop-buy-btn:hover { background: #b39226; color: white; }
 
         /* Admin Controls */
-        .admin-controls { display: flex; gap: 10px; margin-top: 10px; }
+        .admin-controls { display: flex; gap: 10px; margin-top: 10px; margin-bottom: 10px; }
         .btn-edit { flex: 1; background: #3498db; color: white; border: none; padding: 5px; border-radius: 4px; font-size: 0.8rem; }
         .btn-delete { flex: 1; background: #e74c3c; color: white; border: none; padding: 5px; border-radius: 4px; font-size: 0.8rem; }
 
@@ -195,12 +233,7 @@
         .m-img-box img { width: 100%; height: 100%; object-fit: cover; }
         .m-details { padding: 40px; overflow-y: auto; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; z-index: 10; color: #333; }
-        
-        /* NEW: Description formatting class */
         .formatted-desc { white-space: pre-line; line-height: 1.7; color: #666; margin-bottom: 20px; }
-
-        .watt-btn { padding: 8px 15px; border: 1px solid #ddd; background: white; margin-right: 5px; cursor: pointer; border-radius: 4px; }
-        .watt-btn.selected { background: black; color: white; border-color: black; }
 
         /* --- 9. FORMS (Checkout & Admin) --- */
         .form-container { padding: 20px; }
@@ -209,9 +242,7 @@
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-family: 'Manrope', sans-serif; transition: 0.3s; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); }
         .form-header { font-size: 1.5rem; font-weight: bold; font-family: 'Playfair Display'; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid var(--gold); width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; margin-right: 10px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
+        
         .admin-trigger-btn { background: none; border: none; font-size: 0.8rem; color: #ccc; cursor: pointer; margin-top: 50px; }
         .admin-trigger-btn:hover { color: #888; text-decoration: underline; }
 
@@ -229,11 +260,16 @@
             nav { flex-direction: column; gap: 10px; padding: 15px 5%; }
             .menu { display: flex; gap: 15px; font-size: 0.8rem; overflow-x: auto; width: 100%; white-space: nowrap; }
             
+            /* HERO FIX */
+            .slide { padding-left: 0; justify-content: center; text-align: center; }
+            .hero-content { margin: 0 auto; width: 90%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px); }
+            .hero-content h1 { font-size: 2.5rem; }
+
             .grid-container { 
                 display: grid; 
                 grid-template-columns: 1fr 1fr;
                 grid-template-rows: auto;
-                gap: 10px;
+                gap: 15px;
                 height: auto;
             }
             .g-item { height: 280px; }
@@ -242,12 +278,13 @@
             .shop-grid { 
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 10px; 
+                gap: 15px; 
             } 
             .shop-img-box { height: 180px; }
-            .shop-card { border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-            .shop-info { padding: 10px; }
-            .shop-name { font-size: 0.9rem; margin-bottom: 5px; }
+            .shop-card { border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+            .shop-info { padding: 12px; }
+            .shop-name { font-size: 0.95rem; margin-bottom: 5px; }
+            .shop-price-main { font-size: 1.1rem; }
             
             .admin-controls { flex-direction: column; gap: 5px; }
 
@@ -323,19 +360,31 @@
             <div class="grid-container">
                 <div class="g-item g-item-1" onclick="openProductModal('1')">
                     <img src="https://image2url.com/images/1765476827772-f85d99d5-3614-49bf-8ca8-adbd0f98eec5.png">
-                    <div class="price-badge"><div>R-Bulb 9<br> <b>₹340</b></div><div class="add-btn-small">+</div></div>
+                    <div class="price-badge">
+                        <div>R-Bulb 9<br><b>₹340</b></div>
+                        <div class="add-btn-small">+</div>
+                    </div>
                 </div>
                 <div class="g-item g-item-2" onclick="openProductModal('2')">
                     <img src="https://image2url.com/images/1765476141566-eb3482af-174c-4c4f-a637-95727ad8394d.jpg">
-                    <div class="price-badge"><div> PrimeRound LED Panel <br> <b>₹95</b></div><div class="add-btn-small">+</div></div>
+                    <div class="price-badge">
+                        <div>PrimeRound Panel<br><b>₹95</b></div>
+                        <div class="add-btn-small">+</div>
+                    </div>
                 </div>
                 <div class="g-item g-item-3" onclick="openProductModal('3')">
                     <img src="https://image2url.com/images/1765476672802-c3e4f933-1fa3-4dd4-aedd-f58b9a81fb3c.png">
-                    <div class="price-badge"><div>9W LED Bulb <br> <b>₹65</b></div><div class="add-btn-small">+</div></div>
+                    <div class="price-badge">
+                        <div>9W LED Bulb<br><b>₹65</b></div>
+                        <div class="add-btn-small">+</div>
+                    </div>
                 </div>
                 <div class="g-item g-item-4" onclick="openProductModal('4')">
                     <img src="https://image2url.com/images/1765476493276-c7ab112a-d0fc-42fe-ba76-4b24855a237c.jpg">
-                    <div class="price-badge"><div>StormGuard Flood Light <br> <b>₹1299</b></div><div class="add-btn-small">+</div></div>
+                    <div class="price-badge">
+                        <div>Flood Light<br><b>₹1299</b></div>
+                        <div class="add-btn-small">+</div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -467,14 +516,9 @@
                 <!-- UPDATED: Formatted Description -->
                 <p class="formatted-desc" id="mDesc">Description...</p>
                 
-                <div style="margin-bottom:25px;">
-                    <span style="font-weight:bold; display:block; margin-bottom:10px;">Wattage:</span>
-                    <button class="watt-btn selected">7W</button>
-                    <button class="watt-btn">9W</button>
-                    <button class="watt-btn">12W</button>
-                </div>
+                <!-- WATTAGE OPTION REMOVED AS REQUESTED -->
 
-                <div style="display:flex; gap:15px;">
+                <div style="display:flex; gap:15px; margin-top:30px;">
                     <button style="flex:1; background:transparent; border:2px solid black; padding:15px; font-weight:bold;" onclick="addToCartFromModal()">Add to Cart</button>
                     <button style="flex:1; background:var(--gold); border:none; padding:15px; font-weight:bold;" onclick="buyNow()">Buy Now</button>
                 </div>
@@ -716,7 +760,7 @@
                 let discountText = '';
                 if(p.mrp && p.mrp > p.price) {
                     let off = Math.round(((p.mrp - p.price) / p.mrp) * 100);
-                    discountText = `(${off}% OFF)`;
+                    discountText = `-${off}%`;
                 }
 
                 card.innerHTML = `
@@ -732,11 +776,16 @@
                         <div class="shop-price-box">
                             <div class="shop-price-main">₹${p.price}</div>
                             <div class="shop-price-mrp">${displayMrp}</div>
-                            <div class="shop-discount">${discountText}</div>
+                            <div class="shop-discount" style="display:${discountText ? 'block' : 'none'}">${discountText}</div>
                         </div>
 
                         ${adminHtml}
-                        <button class="shop-add-btn" onclick="directAddToCart('${p.id}')">Add to Cart</button>
+                        
+                        <!-- NEW: BUY NOW & ADD TO CART BUTTONS -->
+                        <div class="shop-actions">
+                            <button class="shop-add-btn" onclick="directAddToCart('${p.id}')">Add Cart</button>
+                            <button class="shop-buy-btn" onclick="directBuyNow('${p.id}')">Buy Now</button>
+                        </div>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -885,6 +934,15 @@
             const item = products.find(p => p.id == id);
             if(item) { cart.push(item); saveCart(); renderCart(); toggleCart(); }
         }
+        
+        // NEW: Direct Buy Now from Grid
+        function directBuyNow(id) {
+            currentProduct = products.find(p => p.id == id);
+            if(currentProduct) {
+                buyNow();
+            }
+        }
+
         function addToCartFromModal() {
             if(currentProduct) { cart.push(currentProduct); saveCart(); closeModal('productModal'); toggleCart(); }
         }
